@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rgb: MyString
+  name: MyString
+  is_trans: false
+  external_ids: MyString
+
+two:
+  rgb: MyString
+  name: MyString
+  is_trans: false
+  external_ids: MyString

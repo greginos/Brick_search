@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  box_sku: 1
+  name: MyString
+
+two:
+  box_sku: 1
+  name: MyString
