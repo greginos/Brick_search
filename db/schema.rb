@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_19_162538) do
+ActiveRecord::Schema.define(version: 2019_03_21_083500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "boxes", force: :cascade do |t|
-    t.integer "box_sku"
+    t.bigint "box_sku"
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

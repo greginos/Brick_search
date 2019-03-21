@@ -38,13 +38,13 @@ def importElement(request, url = nil)
     end
   end
   unless result['next'].nil?
-    puts "Moving to another page"
+    puts "Moving to another #{request} page"
     url = result['next']
     importElement(request, url) unless result['next'].nil?
   end
-  puts "#{request.classify.constantize.all.count} #{request} created"
+  request == "sets" ? puts "#{Box.all.count} #{request} created" : puts "#{request.classify.constantize.all.count} #{request} created"
 end
 
+importElement("sets")
 importElement("colors")
 importElement("parts")
-importElement("sets")
