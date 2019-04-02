@@ -9,7 +9,7 @@ require 'json'
 require 'open-uri'
 
 
-def importElement(request, url = nil)
+def import_element(request, url = nil)
   key = "3c19aaab1cb4a59b4776e75383e9bc2f"
   page_size = 2000
   url = "https://rebrickable.com/api/v3/lego/#{request}/?key=#{key}&page_size=#{page_size}" if url.nil?
@@ -40,11 +40,49 @@ def importElement(request, url = nil)
   unless result['next'].nil?
     puts "Moving to another #{request} page"
     url = result['next']
-    importElement(request, url) unless result['next'].nil?
+    import_element(request, url) unless result['next'].nil?
   end
-  request == "sets" ? puts "#{Box.all.count} #{request} created" : puts "#{request.classify.constantize.all.count} #{request} created"
+  if request == "sets"
+    puts "#{Box.all.count} #{request} created"
+  else
+    puts "#{request.classify.constantize.all.count} #{request} created"
+  end
 end
 
-importElement("sets")
-importElement("colors")
-importElement("parts")
+
+def import_parts_from_sets(request, url = nil)
+  key = "3c19aaab1cb4a59b4776e75383e9bc2f"
+  page_size = 5000
+  url = "https://rebrickable.com/api/v3/lego/sets/#{request}/parts/?key=#{key}" if url.nil?
+  response = open(url).read
+  result = JSON.parse(response)
+  in_box = Box.where(box_sku: request).first
+  if result["count"].positive?
+    puts "#{in_box.box_sku} - #{in_box.name} - #{result["count"]} parts awaited"
+    result["results"].each do |part|
+      p part_number = part["part"]["part_num"]
+      box_part = Part.where(part_sku: part_number).first
+      in_box.parts << box_part unless box_part.nil?
+      puts "#{part["part"]["part_num"]} added"if in_box.save
+    end
+    p in_box.parts.length
+  else
+    puts "No parts for this set !!!"
+  end
+end
+
+def add_parts_to_boxes
+  Box.all.each do |box|
+    box.parts = []
+    request = box.box_sku
+    import_parts_from_sets(request)
+    p box.parts.length
+    puts "#{box.box_sku} - #{box.name} - #{box.parts.length} parts added"
+  end
+  puts "All sets done"
+end
+
+# import_element("sets")
+# import_element("colors")
+# import_element("parts")
+add_parts_to_boxes
