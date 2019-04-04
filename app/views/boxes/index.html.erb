@@ -1,0 +1,5 @@
+<ul>
+<% @boxes.each do |box| %>
+  <li><%= "#{box.box_sku} - #{box.name} - #{box.parts.length} parts" %></li>
+<% end %>
+</ul>
